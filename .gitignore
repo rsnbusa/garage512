@@ -1,5 +1,5 @@
-*.md
 *.obj
+*.md
 build
 .devcontainer
 .bin
