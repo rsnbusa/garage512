@@ -1,0 +1,9 @@
+*.md
+*.obj
+build
+.devcontainer
+.bin
+*.mk
+.test.py
+.DS_Store
+.clang*

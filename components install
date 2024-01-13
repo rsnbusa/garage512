@@ -1,0 +1,59 @@
+
+For a RAINMAKER based app
+
+sdkconfig bluetooth should have bluetooth enable and just be Nimble-BLE Only else size does not fit in 4MB Flash
+the partitions shoulb be two toas or copy this
+
+# Name,   Type, SubType, Offset,  Size, Flags
+# Note: Firmware partition offset needs to be 64K aligned, initial 36K (9 sectors) are reserved for bootloader and partition table
+sec_cert,  0x3F, ,0xd000,    0x3000, ,  # Never mark this as an encrypted partition
+nvs,      data, nvs,     0x10000,   0x6000,
+otadata,  data, ota,     ,          0x2000
+phy_init, data, phy,     ,          0x1000,
+ota_0,    app,  ota_0,   0x20000,   1500K,
+ota_1,    app,  ota_1,   ,          1500K,
+fctry,    data, nvs,     ,  0x6000,
+config,   data, nvs,     ,          2k
+storage,  data, spiffs,0x31e000,400k
+
+better do a build to get access to a Terminal with idf.py. If errors no matter.
+
+RStart at the Project ROOT Directory
+
+git clone --recursive https://github.com/espressif/esp-rainmaker.git
+
+then get from <esp-rainmaker> folder take the <components> to the root directory of the  project. 
+Then take out from the esp-rainmaker folder <examples> folder get the <common> folder and put in the <components> folder 
+Delete esp-rainmaker folder now useless
+
+In the root folder cmakelstis.txt add
+set(EXTRA_COMPONENT_DIRS components/common/app_wifi components/common/app_reset)
+
+Fastled install in ROOT folder of project
+git clone --recursive https://github.com/bbulkow/FastLED-idf.git
+open <FastLED-idf> and move from <components>FastLED-idf inside the root <components> folder
+delete FastLed-idf folder 
+
+SSD1306 via u8g2 installing the component
+in <component> folder of project  +++++pwd must point to components+++++
+git clone --recursive https://github.com/olikraus/u8g2.git
+
+then in a Terminal from the VSC (access to idf.py) do a 
+idf.py reconfigure
+
+clean, configure if necessary skdconfig
+build and flash
+
+frequency was tested upto 72000hz and WORKED!!! just fyi
+
+the standard app_wifi does not have a call to start provisioning with a User/Password defined vars.
+In Garage version, copy the commom/app_wifi if you want that and change in main app at the end the call to the app
+    err = app_wifi_start(POP_TYPE_RANDOM); 
+    to
+    err = app_wifi_start(POP_TYPE_RANDOM,(char*)"PROV_RSN",(char *)"csttpstt");
+
+    as is the case in this version
+
+For u8g2 in components dir
+git clone https://github.com/olikraus/u8g2.git
+git clone https://github.com/mkfrey/u8g2-hal-esp-idf.git

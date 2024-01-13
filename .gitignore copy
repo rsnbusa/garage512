@@ -1,0 +1,15 @@
+*.md
+*.py
+*.obj
+build
+.vscode
+.devcontainer
+*.lock
+.bin
+.gitignore
+Makefile
+*.mk
+.test.py
+.DS_Store
+.clang*
+
